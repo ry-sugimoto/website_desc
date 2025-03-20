@@ -6,11 +6,6 @@ class Website < ApplicationRecord
   private
 
   def valid_url_format
-    uri = begin
-      URI.parse(url)
-    rescue StandardError
-      false
-    end
-    errors.add(:url, "must be a valid URL") unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+    errors.add(:url, "must be a valid URL") unless UrlValidator.valid?(url)
   end
 end
