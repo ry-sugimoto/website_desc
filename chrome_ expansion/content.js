@@ -15,31 +15,34 @@
   overlay.style.right = "10px"
 
   const divActions = document.createElement("div")
-  divActions.style.padding="16px 16px"
-  divActions.style.display="flex"
-  divActions.style.justifyContent="center"
+  divActions.style.padding = "16px 16px"
+  divActions.style.display = "flex"
+  divActions.style.justifyContent = "center"
 
   // 概要ボタン
-  const executeBtn = document.createElement("button")
+  const executeBtn = createButtonElement()
   executeBtn.id = "execute-btn"
-  executeBtn.textContent = "概要ボタン"
+  executeBtn.textContent = "概要表示"
   executeBtn.onclick = fetchDescription
   divActions.appendChild(executeBtn)
 
   // 位置変更ボタン
   const divPosBtns = document.createElement("div")
-  divPosBtns.style.marginLeft="auto"
-
+  divPosBtns.style.marginLeft = "auto"
   const positions = [
-    { name: "右上", top: "10px", right: "10px", bottom: "", left: "" },
-    { name: "右下", top: "", right: "10px", bottom: "10px", left: "" },
-    { name: "左下", top: "", right: "", bottom: "10px", left: "10px" },
-    { name: "左上", top: "10px", right: "", bottom: "", left: "10px" }
+    { name: "右上", top: "10px", right: "10px", bottom: "", left: "", icon: 'icon/top_right.svg' },
+    { name: "右下", top: "", right: "10px", bottom: "10px", left: "", icon: 'icon/bottom_right.svg' },
+    { name: "左下", top: "", right: "", bottom: "10px", left: "10px", icon: 'icon/bottom_left.svg' },
+    { name: "左上", top: "10px", right: "", bottom: "", left: "10px", icon: 'icon/top_left.svg' }
   ]
 
   positions.forEach((pos) => {
-    const btn = document.createElement("button")
-    btn.textContent = pos.name
+    const btn = createButtonElement()
+    const img = document.createElement("img");
+    img.src = chrome.runtime.getURL(pos.icon);
+    img.width = 32;
+    img.height = 32;
+    btn.appendChild(img);
     btn.style.margin = "5px"
     btn.onclick = () => {
       overlay.style.top = pos.top
@@ -54,29 +57,36 @@
 
   // 概要表示
   const description = document.createElement("p")
-  description.id="desc-text"
-  description.style.padding="16px 16px"
+  description.id = "desc-text"
+  description.style.padding = "16px 16px"
   description.textContent = ""
   overlay.appendChild(description)
 
   document.body.appendChild(overlay)
 })()
 
+function createButtonElement() {
+  const btn = document.createElement("button")
+  btn.style.border = "solid black"
+  btn.style.backgroundColor = "#d3d3d3"
+  return btn
+}
+
 function fetchDescription() {
   const desc = getWebsiteDesc(window.location.href)
-  .then(desc => {
-    const descElem = document.getElementById("desc-text")
-    descElem.textContent = desc
-  })
+    .then(desc => {
+      const descElem = document.getElementById("desc-text")
+      descElem.textContent = desc
+    })
 }
 
 async function getWebsiteDesc(url) {
-  const params = {url: url}
+  const params = { url: url }
   const query = new URLSearchParams(params)
   const response = await fetch(`http://localhost:3000/api/website/description?${query}`)
-  if(response.ok) {
+  if (response.ok) {
     const data = await response.json()
-    return data.description  
+    return data.description
   }
   else {
     return '概要の取得に失敗しました。'
