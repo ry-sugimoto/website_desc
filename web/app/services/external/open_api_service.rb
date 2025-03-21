@@ -9,7 +9,7 @@ module External
           res = JSON.parse(response.body)
           res['choices'][0]['message']['content']
         else
-          reutrn nil
+          return nil
         end
       end
 
