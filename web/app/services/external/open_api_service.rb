@@ -2,13 +2,14 @@ module External
   class OpenApiService
     class << self
       def description(html)
-        content = "下記htmlの内容を80文字以内に要約してください¥n#{html}"
+        content = "下記はhtmlから抜き出した文字列です。内容を80文字以内に要約してください¥n#{html}"
         response = post_completions(content)
 
         if response.status == 200
           res = JSON.parse(response.body)
           res['choices'][0]['message']['content']
         else
+          Rails.logger.debug(response.body)
           return nil
         end
       end
