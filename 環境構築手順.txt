@@ -1,0 +1,27 @@
+# 環境構築手順
+## サーバー起動
+
+1.ターミナルで以下をコマンド実行
+```
+./init.sh
+
+※dockerバージョンによってinit.sh内のコマンドを「docker compose」→「docker-compose」に変更してください
+```
+
+2. 環境変数を入力(web/.env)
+```
+API_KEY=xxxxxxxxxxxxxxx
+```
+
+dockerコンテナを起動
+```
+docker compose up -d
+```
+
+## chrome拡張機能を読み込み
+1. GoogleChrome起動
+2. 拡張機能>拡張機能を管理
+3. デベロッパーモードを有効にする
+4. パッケージ化されていない拡張機能を読み込む
+5. ソースコードの```chrome_expansion```フォルダを選択
+6. 任意のWebサイトで読み込んだ拡張機能を実行する
